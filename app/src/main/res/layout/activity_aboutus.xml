@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".aboutusActivity"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_view"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/hamburger_menu"
+        android:layout_gravity="start"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000">
+
+        <Button
+            android:id="@+id/alexButton"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="72dp"
+            android:layout_marginBottom="56dp"
+            android:text="Alex"
+            app:layout_constraintBottom_toTopOf="@+id/elsonButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/bransonButton" />
+
+        <Button
+            android:id="@+id/bransonButton"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginBottom="56dp"
+            android:text="Branson"
+            app:layout_constraintBottom_toTopOf="@+id/joshuaButton"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
+            android:id="@+id/elsonButton"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="72dp"
+            android:layout_marginBottom="56dp"
+            android:text="Elson"
+            app:layout_constraintBottom_toTopOf="@+id/tecklingButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/joshuaButton" />
+
+        <Button
+            android:id="@+id/joshuaButton"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginBottom="56dp"
+            android:text="Joshua"
+            app:layout_constraintBottom_toTopOf="@+id/terenceButton"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
+            android:id="@+id/tecklingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="72dp"
+            android:layout_marginBottom="250dp"
+            android:text="Teck Ling"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/terenceButton" />
+
+        <Button
+            android:id="@+id/terenceButton"
+            android:layout_width="112dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginBottom="250dp"
+            android:text="Terence"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/aboutusToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/hamburger"
+            app:title="About Us" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

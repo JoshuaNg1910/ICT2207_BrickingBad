@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Bricking Bad</string>
+    <string name="open_drawer">Open Hamburger Menu</string>
+    <string name="close_drawer">Close Hamburger Menu</string>
 </resources>
