@@ -78,7 +78,7 @@
         android:layout_width="343dp"
         android:layout_height="78dp"
         android:layout_marginBottom="236dp"
-        android:text="Likes to program Mobile Forensic related things. Likes to try Mobile Forensic related things. Likes to play Mobile Forensic relate things."
+        android:text="Likes to create and break apart applications and look into the structure, understanding how it works and find weaknesses in the system."
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
