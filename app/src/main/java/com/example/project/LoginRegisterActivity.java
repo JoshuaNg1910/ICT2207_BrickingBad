@@ -20,11 +20,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        repassword = (EditText) findViewById(R.id.repassword);
-        signup = (Button) findViewById(R.id.btnsignup);
-        signin = (Button) findViewById(R.id.btnsignin);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        repassword = findViewById(R.id.repassword);
+        signup = findViewById(R.id.btnsignup);
+        signin = findViewById(R.id.btnsignin);
         DB = new DBHelper(this);
 
         signup.setOnClickListener(new View.OnClickListener() {

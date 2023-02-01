@@ -106,10 +106,12 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.nav_profile:
                 break;
             case R.id.nav_aboutus:
-                Intent intent = new Intent(this, aboutusActivity.class);
-                startActivity(intent);
+                Intent aboutus = new Intent(this, aboutusActivity.class);
+                startActivity(aboutus);
                 break;
             case R.id.nav_logout:
+                Intent logout = new Intent(this, HomeActivity.class);
+                startActivity(logout);
                 break;
         }
 
