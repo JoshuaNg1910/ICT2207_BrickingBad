@@ -6,15 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
-
-import android.os.Bundle;
+import androidx.appcompat.widget.Toolbar;
 
 public class LoginRegisterActivity extends AppCompatActivity {
     EditText username, password, repassword;
     Button signup, signin;
     DBHelper DB;
+    Toolbar toolbar;
+    TextView register;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,8 @@ public class LoginRegisterActivity extends AppCompatActivity {
         repassword = findViewById(R.id.repassword);
         signup = findViewById(R.id.btnsignup);
         signin = findViewById(R.id.btnsignin);
+        toolbar = findViewById(R.id.registerToolbar);
+        register = findViewById(R.id.register);
         DB = new DBHelper(this);
 
         signup.setOnClickListener(new View.OnClickListener() {

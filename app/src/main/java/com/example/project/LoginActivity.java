@@ -7,12 +7,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password;
     Button btnlogin;
     DBHelper DB;
+    Toolbar toolbar;
+    TextView login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
         username = findViewById(R.id.username1);
         password = findViewById(R.id.password1);
         btnlogin = findViewById(R.id.btnsignin1);
+        toolbar = findViewById(R.id.loginToolbar);
+        login = findViewById(R.id.login);
         DB = new DBHelper(this);
         username.setFocusableInTouchMode(true);
         username.setOnKeyListener(new View.OnKeyListener() {

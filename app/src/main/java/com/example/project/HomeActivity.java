@@ -1,23 +1,28 @@
 package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
 public class HomeActivity extends AppCompatActivity {
-
     Button signup, signin;
+    Toolbar toolbar;
+    TextView loginRegister;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        signup = (Button) findViewById(R.id.btnsignup);
-        signin = (Button) findViewById(R.id.btnsignin);
+        signup = findViewById(R.id.btnsignup);
+        signin = findViewById(R.id.btnsignin);
+        toolbar = findViewById(R.id.loginRegisterToolbar);
+        loginRegister = findViewById(R.id.loginRegister);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
