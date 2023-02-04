@@ -47,4 +47,12 @@
         android:text="Register"
         app:layout_constraintTop_toBottomOf="@+id/btnsignin" />
 
+    <Button
+        android:id="@+id/btnchattest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="TEST: Chat Function"
+        app:layout_constraintTop_toBottomOf="@+id/btnsignup" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
