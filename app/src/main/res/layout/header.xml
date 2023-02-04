@@ -7,16 +7,16 @@
     android:gravity="bottom"
     android:padding="20dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image"
         android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/alexdp" />
+        android:layout_height="75dp" />
 
     <TextView
+        android:id="@+id/user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
-        android:text="Alex Sim Wei Xuan"
         android:textSize="20sp" />
 
 

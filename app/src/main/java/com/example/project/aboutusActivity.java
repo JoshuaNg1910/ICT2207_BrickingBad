@@ -1,20 +1,32 @@
 package com.example.project;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
+import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class aboutusActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -27,7 +39,9 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
-
+    View header;
+    CircleImageView imageView;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +56,28 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.aboutusToolbar);
+        header = navigationView.getHeaderView(0);
+        imageView = header.findViewById(R.id.image);
+        textView = header.findViewById(R.id.user);
+        String encodedDP = getSharedPreferences("session", MODE_PRIVATE).getString("image", "");
+        byte[] dp = Base64.decode(encodedDP, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(dp, 0, dp.length);
+        String username = getSharedPreferences("session", MODE_PRIVATE).getString("username", "");
+        imageView.setImageBitmap(bitmap);
+        textView.setText(username);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ContextCompat.checkSelfPermission(aboutusActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(aboutusActivity.this, Manifest.permission.CAMERA)){
+                        ActivityCompat.requestPermissions(aboutusActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
+                    }
+                } else {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 100);
+                }
+            }
+        });
         alexButton.setOnClickListener(this);
         bransonButton.setOnClickListener(this);
         elsonButton.setOnClickListener(this);
@@ -54,6 +90,15 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100){
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
+        }
     }
 
     @Override
@@ -96,11 +141,9 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.nav_newsfeed:
-                break;
             case R.id.nav_chat:
                 break;
             case R.id.nav_profile:
@@ -110,6 +153,14 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(aboutus);
                 break;
             case R.id.nav_logout:
+                SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
+                Boolean isLoggedIn = getSharedPreferences("session", MODE_PRIVATE).getBoolean("isLoggedIn", false);
+                Log.i("Logged In", isLoggedIn.toString());
+                SharedPreferences.Editor editor = session.edit();
+                editor.clear();
+                editor.commit();
+                isLoggedIn = getSharedPreferences("session", MODE_PRIVATE).getBoolean("isLoggedIn", false);
+                Log.i("Logged In", isLoggedIn.toString());
                 Intent logout = new Intent(this, HomeActivity.class);
                 startActivity(logout);
                 break;
