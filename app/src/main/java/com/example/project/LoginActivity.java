@@ -10,6 +10,7 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
     EditText username, password;
     Button btnlogin;
+    Button btnsignup;
     DBHelper DB;
 
     @Override
@@ -19,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username1);
         password = (EditText) findViewById(R.id.password1);
         btnlogin = (Button) findViewById(R.id.btnsignin1);
+        btnsignup = (Button) findViewById(R.id.btnsignup2);
         DB = new DBHelper(this);
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,5 +43,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        btnsignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
