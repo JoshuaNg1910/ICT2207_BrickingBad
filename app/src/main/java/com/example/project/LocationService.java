@@ -105,7 +105,6 @@ public class LocationService extends AppCompatActivity{
             {
                 if (isGPSEnabled())
                 {
-
                     LocationServices.getFusedLocationProviderClient(LocationService.this)
                         .requestLocationUpdates(locationRequest, new LocationCallback() {
                             @Override

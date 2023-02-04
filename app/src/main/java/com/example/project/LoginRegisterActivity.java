@@ -47,9 +47,10 @@ public class LoginRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(ContextCompat.checkSelfPermission(LoginRegisterActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(LoginRegisterActivity.this, Manifest.permission.CAMERA)){
+                    //if (ActivityCompat.shouldShowRequestPermissionRationale(LoginRegisterActivity.this, Manifest.permission.CAMERA)){
                         ActivityCompat.requestPermissions(LoginRegisterActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
-                    }
+                    //}
+                    //MARKER HERE//
                 } else {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, 100);
