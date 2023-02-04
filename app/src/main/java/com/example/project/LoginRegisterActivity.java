@@ -6,25 +6,29 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
-
-import android.os.Bundle;
+import androidx.appcompat.widget.Toolbar;
 
 public class LoginRegisterActivity extends AppCompatActivity {
     EditText username, password, repassword;
     Button signup, signin;
     DBHelper DB;
+    Toolbar toolbar;
+    TextView register;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        repassword = (EditText) findViewById(R.id.repassword);
-        signup = (Button) findViewById(R.id.btnsignup);
-        signin = (Button) findViewById(R.id.btnsignin);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        repassword = findViewById(R.id.repassword);
+        signup = findViewById(R.id.btnsignup);
+        signin = findViewById(R.id.btnsignin);
+        toolbar = findViewById(R.id.registerToolbar);
+        register = findViewById(R.id.register);
         DB = new DBHelper(this);
 
         signup.setOnClickListener(new View.OnClickListener() {
