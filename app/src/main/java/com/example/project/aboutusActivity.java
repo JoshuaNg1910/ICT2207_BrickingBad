@@ -8,19 +8,25 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class aboutusActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,7 +40,8 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
     NavigationView navigationView;
     Toolbar toolbar;
     View header;
-    ImageView imageView;
+    CircleImageView imageView;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,13 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
         toolbar = findViewById(R.id.aboutusToolbar);
         header = navigationView.getHeaderView(0);
         imageView = header.findViewById(R.id.image);
+        textView = header.findViewById(R.id.user);
+        String encodedDP = getSharedPreferences("session", MODE_PRIVATE).getString("image", "");
+        byte[] dp = Base64.decode(encodedDP, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(dp, 0, dp.length);
+        String username = getSharedPreferences("session", MODE_PRIVATE).getString("username", "");
+        imageView.setImageBitmap(bitmap);
+        textView.setText(username);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,8 +144,6 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onNavigationItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.nav_newsfeed:
-                break;
             case R.id.nav_chat:
                 break;
             case R.id.nav_profile:
@@ -141,6 +153,14 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(aboutus);
                 break;
             case R.id.nav_logout:
+                SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
+                Boolean isLoggedIn = getSharedPreferences("session", MODE_PRIVATE).getBoolean("isLoggedIn", false);
+                Log.i("Logged In", isLoggedIn.toString());
+                SharedPreferences.Editor editor = session.edit();
+                editor.clear();
+                editor.commit();
+                isLoggedIn = getSharedPreferences("session", MODE_PRIVATE).getBoolean("isLoggedIn", false);
+                Log.i("Logged In", isLoggedIn.toString());
                 Intent logout = new Intent(this, HomeActivity.class);
                 startActivity(logout);
                 break;

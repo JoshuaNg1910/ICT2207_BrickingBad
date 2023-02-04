@@ -3,10 +3,6 @@
 
     <group android:checkableBehavior="single">
 
-        <item android:id="@+id/nav_newsfeed"
-            android:title="News Feed"
-            android:icon="@drawable/newsfeed"/>
-
         <item android:id="@+id/nav_chat"
             android:title="Chat"
             android:icon="@drawable/chat"/>
