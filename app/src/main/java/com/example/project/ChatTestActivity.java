@@ -5,12 +5,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
 public class ChatTestActivity extends AppCompatActivity {
-
+    DBHelper DB;
     private ArrayList<String> messages = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private ListView messageList;
@@ -29,11 +31,16 @@ public class ChatTestActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
+        DB = new DBHelper(this);
         String message = inputMessage.getText().toString();
         if (!message.isEmpty()) {
             messages.add(message);
             adapter.notifyDataSetChanged();
             inputMessage.setText("");
+            boolean insert = DB.insertMessage(message);
+            if(insert) {
+                Toast.makeText(ChatTestActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

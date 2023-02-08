@@ -14,13 +14,28 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase MyDB) {
         MyDB.execSQL("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT, profilepic BLOB)");
+        MyDB.execSQL("CREATE TABLE messages(message TEXT PRIMARY KEY)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase MyDB, int i, int i1) {
         MyDB.execSQL("DROP TABLE IF EXISTS users");
+        MyDB.execSQL("DROP TABLE IF EXISTS messages");
+    }
+    public boolean insertMessage(String message){
+        SQLiteDatabase MyDB = this.getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+        contentValues.put("message", message);
+        long results = MyDB.insert("messages", null, contentValues);
+        if(results == -1)
+            return false;
+        else
+            return true;
     }
 
+    public boolean loadmessage(String Message){
+
+    }
     public Boolean insertData(String username, String password, byte[] dp){
         SQLiteDatabase MyDB = this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
@@ -62,3 +77,4 @@ public class DBHelper extends SQLiteOpenHelper {
         return dp;
     }
 }
+
