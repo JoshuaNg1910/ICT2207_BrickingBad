@@ -108,7 +108,7 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         }
         else if (view.getId() == R.id.bransonButton) {
-            Intent intent = new Intent(this, bransonActivity.class);
+            Intent intent = new Intent(this, ChatTestActivity.class);
             startActivity(intent);
         }
         else if (view.getId() == R.id.elsonButton) {
