@@ -85,15 +85,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/TakePhoto"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/registerdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="665dp"
+    <Button
+        android:id="@+id/TakePhoto1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Photo"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="718dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
