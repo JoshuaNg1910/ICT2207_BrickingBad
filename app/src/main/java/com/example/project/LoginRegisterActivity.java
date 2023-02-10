@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,14 +45,15 @@ public class LoginRegisterActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.registerToolbar);
         register = findViewById(R.id.register);
         imageView = findViewById(R.id.registerdp);
+        password.setTransformationMethod(new PasswordTransformationMethod());
+        repassword.setTransformationMethod(new PasswordTransformationMethod());
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(ContextCompat.checkSelfPermission(LoginRegisterActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    //if (ActivityCompat.shouldShowRequestPermissionRationale(LoginRegisterActivity.this, Manifest.permission.CAMERA)){
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(LoginRegisterActivity.this, Manifest.permission.CAMERA)){
                         ActivityCompat.requestPermissions(LoginRegisterActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
-                    //}
-                    //MARKER HERE//
+                    }
                 } else {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, 100);

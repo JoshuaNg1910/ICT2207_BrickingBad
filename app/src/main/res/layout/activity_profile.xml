@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".profileActivity"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_view"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/hamburger_menu"
+        android:layout_gravity="start"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/profileToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/hamburger"
+        app:title="Profile" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView"
+        android:layout_width="123dp"
+        android:layout_height="129dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="52dp"
+        android:text="Username:"
+        android:textColor="#FFFFFF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="51dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toRightOf="@id/usernameTextView"
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="120dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="58dp"
+        android:layout_marginTop="200dp"
+        android:text="Save"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usernameTextView" />
+
+    <Button
+        android:id="@+id/changePasswordButton"
+        android:layout_width="120dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="196dp"
+        android:layout_marginRight="58dp"
+        android:text="Change Password"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
