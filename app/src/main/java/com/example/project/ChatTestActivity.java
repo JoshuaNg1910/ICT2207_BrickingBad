@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import android.database.Cursor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +23,8 @@ public class ChatTestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_test);
+        DB = new DBHelper(this);
+        messages = DB.loadMessages();
 
         messageList = (ListView) findViewById(R.id.message_list);
         inputMessage = (EditText) findViewById(R.id.input_message);

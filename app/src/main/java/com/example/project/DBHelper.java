@@ -4,12 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "Login.db";
     public DBHelper(Context context) {
         super(context, "Login.db", null, 1);
     }
+    private ArrayList<String> messages = new ArrayList<>();
 
     @Override
     public void onCreate(SQLiteDatabase MyDB) {
@@ -33,9 +35,18 @@ public class DBHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean loadmessage(String Message){
-
+    public ArrayList<String> loadMessages() {
+        SQLiteDatabase MyDB = this.getReadableDatabase();
+        Cursor cursor = MyDB.rawQuery("SELECT * FROM messages", null);
+        if (cursor!=null && cursor.moveToFirst()) {
+            do {
+                messages.add(cursor.getString(cursor.getColumnIndexOrThrow("message")));
+            } while (cursor.moveToNext());
+        }
+        return messages;
     }
+
+
     public Boolean insertData(String username, String password, byte[] dp){
         SQLiteDatabase MyDB = this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
