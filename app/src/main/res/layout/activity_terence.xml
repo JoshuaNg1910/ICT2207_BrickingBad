@@ -78,9 +78,22 @@
         android:layout_width="343dp"
         android:layout_height="78dp"
         android:layout_marginBottom="236dp"
-        android:text="I enjoy tinkering with technology  and occasionally breaking things and I aspire to become a network engineer one day that is always looking for new and innovative ways to use technology."
+        android:text="I enjoy tinkering with technology and occasionally breaking things and I aspire to become a network engineer one day that is always looking for new and innovative ways to use technology."
         android:textAlignment="center"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/TakePhoto"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:src="@drawable/registerdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="665dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
