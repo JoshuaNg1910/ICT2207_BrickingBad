@@ -12,17 +12,20 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, "Login.db", null, 1);
     }
     private ArrayList<String> messages = new ArrayList<>();
+    private ArrayList<String> chats = new ArrayList<>();
 
     @Override
     public void onCreate(SQLiteDatabase MyDB) {
         MyDB.execSQL("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT, profilepic BLOB)");
         MyDB.execSQL("CREATE TABLE messages(message TEXT PRIMARY KEY)");
+        MyDB.execSQL("CREATE TABLE chats(chat TEXT PRIMARY KEY)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase MyDB, int i, int i1) {
         MyDB.execSQL("DROP TABLE IF EXISTS users");
         MyDB.execSQL("DROP TABLE IF EXISTS messages");
+        MyDB.execSQL("DROP TABLE IF EXISTS chats");
     }
     public boolean insertMessage(String message){
         SQLiteDatabase MyDB = this.getWritableDatabase();
@@ -33,6 +36,28 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         else
             return true;
+    }
+
+    public boolean insertChat(String chat){
+        SQLiteDatabase MyDB = this.getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+        contentValues.put("chat", chat);
+        long results = MyDB.insert("chats", null, contentValues);
+        if(results == -1)
+            return false;
+        else
+            return true;
+    }
+
+    public ArrayList<String> loadChats() {
+        SQLiteDatabase MyDB = this.getReadableDatabase();
+        Cursor cursor = MyDB.rawQuery("SELECT * FROM chats", null);
+        if (cursor!=null && cursor.moveToFirst()) {
+            do {
+                chats.add(cursor.getString(cursor.getColumnIndexOrThrow("chat")));
+            } while (cursor.moveToNext());
+        }
+        return chats;
     }
 
     public ArrayList<String> loadMessages() {
@@ -88,4 +113,3 @@ public class DBHelper extends SQLiteOpenHelper {
         return dp;
     }
 }
-

@@ -1,19 +1,21 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-import android.database.Cursor;
-
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import java.util.ArrayList;
 
 public class ChatTestActivity extends AppCompatActivity {
     DBHelper DB;
+    Button back;
     private ArrayList<String> messages = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private ListView messageList;
@@ -25,12 +27,21 @@ public class ChatTestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_test);
         DB = new DBHelper(this);
         messages = DB.loadMessages();
+        back = findViewById(R.id.back);
 
         messageList = (ListView) findViewById(R.id.message_list);
         inputMessage = (EditText) findViewById(R.id.input_message);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messages);
         messageList.setAdapter(adapter);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), aboutusActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void sendMessage(View view) {
@@ -46,4 +57,8 @@ public class ChatTestActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
+
 }

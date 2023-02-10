@@ -108,7 +108,7 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         }
         else if (view.getId() == R.id.bransonButton) {
-            Intent intent = new Intent(this, bransonActivity.class);
+            Intent intent = new Intent(this, ChatTestActivity.class);
             startActivity(intent);
         }
         else if (view.getId() == R.id.elsonButton) {
@@ -116,7 +116,7 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         }
         else if (view.getId() == R.id.joshuaButton) {
-            Intent intent = new Intent(this, joshuaActivity.class);
+            Intent intent = new Intent(this, ChatTest2Activity.class);
             startActivity(intent);
         }
         else if (view.getId() == R.id.tecklingButton) {
