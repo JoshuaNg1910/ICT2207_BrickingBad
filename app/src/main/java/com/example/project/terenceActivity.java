@@ -37,6 +37,7 @@ public class terenceActivity extends AppCompatActivity {
     private static final int REQUEST_STORAGE_PERMISSION = 2;
     private static final int REQUEST_GALLERY_IMAGE = 3;
     private Button Take;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
