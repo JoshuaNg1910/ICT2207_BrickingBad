@@ -78,9 +78,20 @@
         android:layout_width="343dp"
         android:layout_height="78dp"
         android:layout_marginBottom="236dp"
-        android:text="I enjoy tinkering with technology  and occasionally breaking things and I aspire to become a network engineer one day that is always looking for new and innovative ways to use technology."
+        android:text="I enjoy tinkering with technology and occasionally breaking things and I aspire to become a network engineer one day that is always looking for new and innovative ways to use technology."
         android:textAlignment="center"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/TakePhoto1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Photo"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="718dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
