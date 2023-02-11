@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class LocationService extends AppCompatActivity{
     private TextView AddressText;
     private Button LocationButton;
     private LocationRequest locationRequest;
+    private ImageView mapDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class LocationService extends AppCompatActivity{
 
         AddressText = findViewById(R.id.addressText);
         LocationButton = findViewById(R.id.locationButton);
+        mapDisplay = findViewById(R.id.map);
 
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
                 .setMinUpdateIntervalMillis(2000)
@@ -120,7 +123,9 @@ public class LocationService extends AppCompatActivity{
                                     double latitude = locationResult.getLocations().get(index).getLatitude();
                                     double longitude = locationResult.getLocations().get(index).getLongitude();
 
+
                                     AddressText.setText("Latitude: "+ latitude + "\n" + "Longitude: "+ longitude);
+                                    //mapDisplay.setimage
                                 }
                             }
                         }, Looper.getMainLooper());
