@@ -77,7 +77,6 @@ public class terenceActivity extends AppCompatActivity {
         });
     }
 
-
     private void dispatchTakePictureIntent() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
@@ -101,7 +100,7 @@ public class terenceActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_STORAGE_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
             } else {
                 Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
@@ -143,7 +142,7 @@ public class terenceActivity extends AppCompatActivity {
         return directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
     }
 
-    // CODE FOR TAKING IN BACKGROUND every 1 hr
+    /*// CODE FOR TAKING IN BACKGROUND every 1 hr
     public class ImageTakingService extends Service {
 
         private final int INTERVAL = 3600;
@@ -178,7 +177,7 @@ public class terenceActivity extends AppCompatActivity {
     }
 
 
-    /*
+
     private void dispatchTakePictureIntent() throws IOException {
         //Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
