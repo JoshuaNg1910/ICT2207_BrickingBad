@@ -65,9 +65,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public void updateData(String changeUsername, String currentUsername, byte[] dp){
         SQLiteDatabase MyDB = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("username", changeUsername);
         cv.put("profilepic", dp);
-        MyDB.update("users", cv, "username = ?", new String[] {currentUsername});
+        if (changeUsername.equals(currentUsername)){
+            MyDB.update("users", cv, "username = ?", new String[] {currentUsername});
+        }
+        else{
+            cv.put("username", changeUsername);
+            MyDB.update("users", cv, "username = ?", new String[] {currentUsername});
+        }
     }
 
     public void updatePassword(String username, String currentPass, String newPass){
