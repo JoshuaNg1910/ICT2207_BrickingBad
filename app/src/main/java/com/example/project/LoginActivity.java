@@ -1,6 +1,8 @@
 package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText username, password;
     Button btnlogin;
     Button btnsignup;
+    Toolbar toolbar;
     DBHelper DB;
 
     @Override
@@ -24,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password1);
         btnlogin = (Button) findViewById(R.id.btnsignin1);
         btnsignup = (Button) findViewById(R.id.btnsignup2);
+        toolbar = findViewById(R.id.loginToolbar);
         DB = new DBHelper(this);
         password.setTransformationMethod(new PasswordTransformationMethod());
         btnlogin.setOnClickListener(new View.OnClickListener() {

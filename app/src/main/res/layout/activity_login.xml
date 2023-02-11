@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#000000"
     tools:context=".LoginActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/loginToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Login Page" />
+
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/login"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Login"
         android:textStyle="bold"
         android:textColor="#ffffff"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/loginToolbar"/>
 
     <EditText
         android:id="@+id/username1"
@@ -22,7 +36,8 @@
         android:layout_height="wrap_content"
         android:hint="Username"
         android:layout_marginTop="50dp"
-        android:background="@color/white"/>
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/login"/>
 
 
     <EditText
@@ -31,8 +46,8 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:layout_marginTop="50dp"
-        android:layout_below="@+id/username1"
-        android:background="@color/white"/>
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/username1"/>
 
     <Button
         android:id="@+id/btnsignin1"
@@ -40,7 +55,7 @@
         android:layout_height="wrap_content"
         android:text="Sign in"
         android:layout_marginTop="50dp"
-        android:layout_below="@+id/password1"/>
+        app:layout_constraintTop_toBottomOf="@id/password1"/>
 
     <Button
         android:id="@+id/btnsignup2"
@@ -48,6 +63,6 @@
         android:layout_height="wrap_content"
         android:text="Not a member? Sign up"
         android:layout_marginTop="50dp"
-        android:layout_below="@+id/btnsignin1"/>
+        app:layout_constraintTop_toBottomOf="@id/btnsignin1"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
