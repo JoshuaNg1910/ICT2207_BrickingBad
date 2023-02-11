@@ -1,6 +1,7 @@
 package com.example.project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -27,12 +28,21 @@ public class terenceActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 100;
     String mCurrentPhotoPath;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terence);
 
+        toolbar = findViewById(R.id.terenceToolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         Button Take = (Button) findViewById(R.id.TakePhoto1);
         Take.setOnClickListener(new View.OnClickListener() {
             @Override

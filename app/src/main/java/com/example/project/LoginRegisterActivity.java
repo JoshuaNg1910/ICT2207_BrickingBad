@@ -53,11 +53,13 @@ public class LoginRegisterActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ContextCompat.checkSelfPermission(LoginRegisterActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(LoginRegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ){
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(LoginRegisterActivity.this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(LoginRegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ){
-                        ActivityCompat.requestPermissions(LoginRegisterActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-                    }
-                } else {
+                if(ContextCompat.checkSelfPermission(LoginRegisterActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(LoginRegisterActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
+                }
+                else if (ContextCompat.checkSelfPermission(LoginRegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ){
+                    ActivityCompat.requestPermissions(LoginRegisterActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                }
+                else {
                     final CharSequence[] options = {"Take Photo from Camera", "Choose from Gallery", "Cancel"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginRegisterActivity.this);
                     builder.setTitle("Choose your profile picture");
@@ -109,7 +111,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                             }
                         }
                         else{
-                            Toast.makeText(LoginRegisterActivity.this, "User already exists! please sign in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginRegisterActivity.this, "User already exists! Please sign in", Toast.LENGTH_SHORT).show();
                         }
                     }else{
                         Toast.makeText(LoginRegisterActivity.this, "Passwords does not match", Toast.LENGTH_SHORT).show();

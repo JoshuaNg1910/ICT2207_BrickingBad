@@ -78,15 +78,21 @@ public class profileActivity extends AppCompatActivity implements NavigationView
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] dp = stream.toByteArray();
-                DB.updateData(changedUsername,username,dp);
-                imageView.setImageBitmap(bitmap);
-                textView.setText(changedUsername);
-                SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
-                SharedPreferences.Editor editor = session.edit();
-                editor.putString("username", changedUsername);
-                editor.putString("image", Base64.encodeToString(dp, Base64.DEFAULT));
-                editor.apply();
-                Toast.makeText(profileActivity.this,"Profile Updated", Toast.LENGTH_SHORT).show();
+                boolean checkuser = DB.checkusername(changedUsername);
+                if (!checkuser){
+                    DB.updateData(changedUsername,username,dp);
+                    imageView.setImageBitmap(bitmap);
+                    textView.setText(changedUsername);
+                    SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = session.edit();
+                    editor.putString("username", changedUsername);
+                    editor.putString("image", Base64.encodeToString(dp, Base64.DEFAULT));
+                    editor.apply();
+                    Toast.makeText(profileActivity.this,"Profile Updated", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(profileActivity.this, "User already exists! Profile update failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         changePassword.setOnClickListener(new View.OnClickListener() {
@@ -106,11 +112,13 @@ public class profileActivity extends AppCompatActivity implements NavigationView
         circleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ){
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(profileActivity.this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ){
-                        ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-                    }
-                } else {
+                if(ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
+                }
+                else if (ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ){
+                    ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                }
+                else {
                     final CharSequence[] options = {"Take Photo from Camera", "Choose from Gallery", "Cancel"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(profileActivity.this);
                     builder.setTitle("Choose your profile picture");
