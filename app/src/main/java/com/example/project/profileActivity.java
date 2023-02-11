@@ -78,21 +78,15 @@ public class profileActivity extends AppCompatActivity implements NavigationView
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] dp = stream.toByteArray();
-                boolean checkuser = DB.checkusername(changedUsername);
-                if (!checkuser){
-                    DB.updateData(changedUsername,username,dp);
-                    imageView.setImageBitmap(bitmap);
-                    textView.setText(changedUsername);
-                    SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = session.edit();
-                    editor.putString("username", changedUsername);
-                    editor.putString("image", Base64.encodeToString(dp, Base64.DEFAULT));
-                    editor.apply();
-                    Toast.makeText(profileActivity.this,"Profile Updated", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(profileActivity.this, "User already exists! Profile update failed", Toast.LENGTH_SHORT).show();
-                }
+                DB.updateData(changedUsername,username,dp);
+                imageView.setImageBitmap(bitmap);
+                textView.setText(changedUsername);
+                SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);
+                SharedPreferences.Editor editor = session.edit();
+                editor.putString("username", changedUsername);
+                editor.putString("image", Base64.encodeToString(dp, Base64.DEFAULT));
+                editor.apply();
+                Toast.makeText(profileActivity.this,"Profile Updated", Toast.LENGTH_SHORT).show();
             }
         });
         changePassword.setOnClickListener(new View.OnClickListener() {
