@@ -167,13 +167,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".LocationService"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".retrieveContacts"
             android:exported="false">
             <meta-data

