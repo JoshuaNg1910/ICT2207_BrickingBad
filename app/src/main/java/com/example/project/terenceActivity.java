@@ -8,25 +8,27 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Service;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,6 +38,7 @@ public class terenceActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 2;
     private static final int REQUEST_GALLERY_IMAGE = 3;
+    private static final int REQUEST_VIDEO_CAPTURE = 4;
     private Button Take;
     Toolbar toolbar;
 
@@ -57,14 +60,16 @@ public class terenceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final CharSequence[] options = {"Take Photo from Camera", "Choose from Gallery", "Cancel"};
+                final CharSequence[] options = {"Take Photo from Camera", "Record Video", "Choose from Gallery", "Cancel"};
                 AlertDialog.Builder builderMedia = new AlertDialog.Builder(terenceActivity.this);
-                builderMedia.setTitle("Select Option");
+                builderMedia.setTitle("Choose Media");
                 builderMedia.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (options[item].equals("Take Photo from Camera")) {
                             dispatchTakePictureIntent();
+                        } else if (options[item].equals("Record Video")) {
+                            dispatchTakeVideoIntent();
                         } else if (options[item].equals("Choose from Gallery")) {
                             chooseImageFromGallery();
                         } else if (options[item].equals("Cancel")) {
@@ -80,12 +85,26 @@ public class terenceActivity extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-        ContextCompat.checkSelfPermission(terenceActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_GALLERY_IMAGE);
+                ContextCompat.checkSelfPermission(terenceActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_GALLERY_IMAGE);
         } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private void dispatchTakeVideoIntent() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(terenceActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, REQUEST_GALLERY_IMAGE);
+        } else {
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
             }
         }
     }
@@ -101,7 +120,11 @@ public class terenceActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_STORAGE_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
-                dispatchTakePictureIntent();
+                if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                    dispatchTakePictureIntent();
+                } else if (requestCode == REQUEST_VIDEO_CAPTURE) {
+                    dispatchTakeVideoIntent();
+                }
             } else {
                 Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
             }
@@ -114,32 +137,82 @@ public class terenceActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            String filePath = getFilePath();
             // Save the image to the device's storage
             try {
-                FileOutputStream fos = new FileOutputStream(getFilePath());
+                FileOutputStream fos = new FileOutputStream(filePath);
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.flush();
                 fos.close();
-                Toast.makeText(this, "Image saved!", Toast.LENGTH_SHORT).show();
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            // Add the image to the photo gallery
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.DATA, filePath);
+            getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            Toast.makeText(this, "Image saved!", Toast.LENGTH_SHORT).show();
+        }
+        else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = data.getData();
+            String videoPath = getFilePath();
+            File videoFile = new File(videoPath);
+
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(videoUri);
+                FileOutputStream fileOutputStream = new FileOutputStream(videoFile);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    fileOutputStream.write(buffer, 0, bytesRead);
+                }
+                inputStream.close();
+                fileOutputStream.close();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // Save the video to the device's gallery
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Video.Media.DATA, videoPath);
+            values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+            Toast.makeText(this, "Video saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
     private String getFilePath() {
         File directory = null;
+        String full = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            full = directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
         } else {
             directory = new File(getFilesDir(), "Pictures");
             if (!directory.exists()) {
                 directory.mkdirs();
+                full = directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
             }
         }
-        return directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            directory = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            full = directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp4";
+        } else {
+            directory = new File(getFilesDir(), "Movies");
+            if (!directory.exists()) {
+                directory.mkdirs();
+                full = directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
+            }
+        }
+
+        return full;
     }
 
     /*// CODE FOR TAKING IN BACKGROUND every 1 hr
@@ -203,9 +276,9 @@ public class terenceActivity extends AppCompatActivity {
         String imageFileName = "JPEG_" + timeStamp + "_";
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-        //        ".jpg",         /* suffix */
-       //         storageDir      /* directory */
-       // );
+    //        ".jpg",         /* suffix */
+    //         storageDir      /* directory */
+    // );
        /* mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }*/
