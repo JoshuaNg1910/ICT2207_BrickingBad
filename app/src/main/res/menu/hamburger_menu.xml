@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="single">
 
+        <item android:id="@+id/nav_contact"
+            android:title="Contact"
+            android:icon="@drawable/contacts"/>
+            
         <item android:id="@+id/nav_chat"
             android:title="Chat"
             android:icon="@drawable/chat"/>
