@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("image", encodedDP);
                         editor.commit();
                         Toast.makeText(LoginActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, aboutusActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, chatlistActivity.class);
                         startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();

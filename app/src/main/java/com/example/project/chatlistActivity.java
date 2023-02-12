@@ -1,10 +1,15 @@
 package com.example.project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,24 +17,16 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.content.Intent;
 import android.widget.TextView;
-
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class aboutusActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class chatlistActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    Button alexButton;
-    Button bransonButton;
-    Button elsonButton;
-    Button joshuaButton;
-    Button tecklingButton;
-    Button terenceButton;
+    RecyclerView recyclerView;
+    ChatAdapter adapter;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
@@ -40,16 +37,11 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_aboutus);
-        alexButton = findViewById(R.id.alexButton);
-        bransonButton = findViewById(R.id.bransonButton);
-        elsonButton = findViewById(R.id.elsonButton);
-        joshuaButton = findViewById(R.id.joshuaButton);
-        tecklingButton = findViewById(R.id.tecklingButton);
-        terenceButton = findViewById(R.id.terenceButton);
+        setContentView(R.layout.activity_chatlist);
+        recyclerView = findViewById(R.id.recyclerview_chatlist);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.aboutusToolbar);
+        toolbar = findViewById(R.id.chatToolbar);
         header = navigationView.getHeaderView(0);
         imageView = header.findViewById(R.id.image);
         textView = header.findViewById(R.id.user);
@@ -59,53 +51,15 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
         String username = getSharedPreferences("session", MODE_PRIVATE).getString("username", "");
         imageView.setImageBitmap(bitmap);
         textView.setText(username);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(aboutusActivity.this, profileActivity.class);
-                startActivity(intent);
-            }
-        });
-        alexButton.setOnClickListener(this);
-        bransonButton.setOnClickListener(this);
-        elsonButton.setOnClickListener(this);
-        joshuaButton.setOnClickListener(this);
-        tecklingButton.setOnClickListener(this);
-        terenceButton.setOnClickListener(this);
+        adapter = new ChatAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         setSupportActionBar(toolbar);
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.alexButton){
-            Intent intent = new Intent(this, alexActivity.class);
-            startActivity(intent);
-        }
-        else if (view.getId() == R.id.bransonButton) {
-            Intent intent = new Intent(this, bransonActivity.class);
-            startActivity(intent);
-        }
-        else if (view.getId() == R.id.elsonButton) {
-            Intent intent = new Intent(this, elsonActivity.class);
-            startActivity(intent);
-        }
-        else if (view.getId() == R.id.joshuaButton) {
-            Intent intent = new Intent(this, joshuaActivity.class);
-            startActivity(intent);
-        }
-        else if (view.getId() == R.id.tecklingButton) {
-            Intent intent = new Intent(this, tecklingActivity.class);
-            startActivity(intent);
-        }
-        else if (view.getId() == R.id.terenceButton) {
-            Intent intent = new Intent(this, terenceActivity.class);
-            startActivity(intent);
-        }
     }
 
     @Override
@@ -121,7 +75,6 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.nav_chat:
                 Intent chatlist = new Intent(this, chatlistActivity.class);

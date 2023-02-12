@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "Login.db";
     public DBHelper(Context context) {
@@ -14,11 +17,58 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase MyDB) {
         MyDB.execSQL("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT, profilepic BLOB)");
+        MyDB.execSQL("CREATE TABLE chat(sender TEXT NOT NULL, receiver TEXT NOT NULL, type TEXT NOT NULL, message TEXT, photo BLOB, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase MyDB, int i, int i1) {
         MyDB.execSQL("DROP TABLE IF EXISTS users");
+        MyDB.execSQL("DROP TABLE IF EXISTS chat");
+    }
+
+    public void sendChat(Message message){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("sender", message.getSender());
+        cv.put("receiver", message.getReceiver());
+        cv.put("type", message.getType());
+        cv.put("message", message.getMessage());
+        cv.put("photo", message.getPhoto());
+        cv.put("timestamp", message.getTimestamp());
+        db.insert("chat", null, cv);
+    }
+
+    public List<Message> getAllMessages(String sender, String receiver){
+        List<Message> messages = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM chat WHERE (sender = ? AND RECEIVER = ?) OR (SENDER = ? AND RECEIVER = ?)", new String[] {sender, receiver, receiver, sender});
+        if (cursor.moveToFirst()){
+            int senderIndex = cursor.getColumnIndex("sender");
+            int receiverIndex = cursor.getColumnIndex("receiver");
+            int typeIndex = cursor.getColumnIndex("type");
+            int messageIndex = cursor.getColumnIndex("message");
+            int photoIndex = cursor.getColumnIndex("photo");
+            int timestampIndex = cursor.getColumnIndex("timestamp");
+            if (senderIndex != -1 && receiverIndex != -1 && typeIndex != -1 && messageIndex != -1 && photoIndex != -1 && timestampIndex != -1) {
+                do {
+                    String send = cursor.getString(senderIndex);
+                    String receive = cursor.getString(receiverIndex);
+                    int type = cursor.getInt(typeIndex);
+                    String message = cursor.getString(messageIndex);
+                    byte[] photo = cursor.getBlob(photoIndex);
+                    String timestamp = cursor.getString(timestampIndex);
+                    Message msg = new Message(send, receive, type, timestamp, message, photo);
+                    messages.add(msg);
+                } while (cursor.moveToNext());
+            }
+        }
+        return messages;
+    }
+
+    public Cursor getAllUsersData(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT username, profilepic FROM users WHERE username != ?", new String[]{username});
+        return cursor;
     }
 
     public Boolean insertData(String username, String password, byte[] dp){
