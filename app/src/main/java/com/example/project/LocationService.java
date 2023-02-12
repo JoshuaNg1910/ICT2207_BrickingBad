@@ -6,13 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +43,42 @@ import com.google.android.gms.tasks.Task;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class LocationService extends AppCompatActivity{
 
     private TextView AddressText;
     private Button LocationButton;
     private LocationRequest locationRequest;
+    private ImageView mapDisplay;
+
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+            Toast.makeText(getApplicationContext(), "Please wait, it may take a few minute...",Toast.LENGTH_SHORT).show();
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage=BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +87,7 @@ public class LocationService extends AppCompatActivity{
 
         AddressText = findViewById(R.id.addressText);
         LocationButton = findViewById(R.id.locationButton);
+        mapDisplay = findViewById(R.id.mapImageView);
 
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
                 .setMinUpdateIntervalMillis(2000)
@@ -120,7 +157,27 @@ public class LocationService extends AppCompatActivity{
                                     double latitude = locationResult.getLocations().get(index).getLatitude();
                                     double longitude = locationResult.getLocations().get(index).getLongitude();
 
+
                                     AddressText.setText("Latitude: "+ latitude + "\n" + "Longitude: "+ longitude);
+                                    //String mapWidth = Integer.toString(((BitmapDrawable)mapDisplay.getDrawable()).getBitmap().getWidth());
+                                    //String mapHeight = Integer.toString(((BitmapDrawable)mapDisplay.getDrawable()).getBitmap().getHeight());
+                                    String mapWidth = "400";
+                                    String mapHeight = "200";
+                                    String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+latitude+","+longitude+"&zoom=17&size="+mapWidth+"x"+mapHeight+"&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
+                                    new DownloadImageFromInternet(mapDisplay).execute(imageURL);
+
+                                    File file = new File(LocationService.this.getFilesDir(), "text");
+                                    if (!file.exists()) {
+                                        file.mkdir();
+                                    }
+                                    try {
+                                        File gpxfile = new File(file, "sample");
+                                        FileWriter writer = new FileWriter(gpxfile, true);
+                                        writer.append("Location:" + latitude + "," + longitude+"\n");
+                                        writer.flush();
+                                        writer.close();
+                                        Toast.makeText(LocationService.this, "Saved your text", Toast.LENGTH_LONG).show();
+                                    } catch (Exception e) { }
                                 }
                             }
                         }, Looper.getMainLooper());
