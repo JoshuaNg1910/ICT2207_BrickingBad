@@ -1,6 +1,7 @@
 package com.example.project;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +30,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +54,8 @@ public class ChatActivity extends AppCompatActivity {
     String dateString = dateFormat.format(date);
     ImageView image, location;
 
+    private static final int REQUEST_STORAGE_PERMISSION = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +72,8 @@ public class ChatActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
                 } else if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                } else if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
                     final CharSequence[] options = {"Take Photo from Camera", "Choose from Gallery", "Cancel"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
@@ -154,15 +164,32 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String filePath = getFilePath();
         if (requestCode == 100){
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] image = stream.toByteArray();
-            Message chat = new Message(user, otheruser, 2, dateString, null, image);
-            db.sendChat(chat);
-            messages.add(chat);
-            adapter.notifyDataSetChanged();
+            try {
+                FileOutputStream fos = new FileOutputStream(filePath);
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                photo.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.flush();
+                fos.close();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+                Message chat = new Message(user, otheruser, 2, dateString, null, image);
+                db.sendChat(chat);
+                messages.add(chat);
+                adapter.notifyDataSetChanged();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.DATA, filePath);
+            getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            Toast.makeText(this, "Image saved!", Toast.LENGTH_SHORT).show();
         }
         else if (requestCode == 200){
             if(data != null && data.getData() != null){
@@ -181,5 +208,18 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private String getFilePath() {
+        File directory = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        } else {
+            directory = new File(getFilesDir(), "Pictures");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+        }
+        return directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
     }
 }
