@@ -79,6 +79,8 @@ public class profileActivity extends AppCompatActivity implements NavigationView
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] dp = stream.toByteArray();
                 DB.updateData(changedUsername,username,dp);
+                DB.updateChatsSender(changedUsername, username);
+                DB.updateChatsReceiver(changedUsername, username);
                 imageView.setImageBitmap(bitmap);
                 textView.setText(changedUsername);
                 SharedPreferences session = getSharedPreferences("session", MODE_PRIVATE);

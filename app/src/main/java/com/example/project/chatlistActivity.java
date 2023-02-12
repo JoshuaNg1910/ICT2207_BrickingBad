@@ -51,6 +51,13 @@ public class chatlistActivity extends AppCompatActivity implements NavigationVie
         String username = getSharedPreferences("session", MODE_PRIVATE).getString("username", "");
         imageView.setImageBitmap(bitmap);
         textView.setText(username);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(chatlistActivity.this, profileActivity.class);
+                startActivity(intent);
+            }
+        });
         adapter = new ChatAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

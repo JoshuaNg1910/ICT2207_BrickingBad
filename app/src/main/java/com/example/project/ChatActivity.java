@@ -49,19 +49,17 @@ public class ChatActivity extends AppCompatActivity {
         });
         user = getSharedPreferences("session", MODE_PRIVATE).getString("username", "");
         messages = db.getAllMessages(user, otheruser);
-        if (!messages.isEmpty()){
-            adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1, messages) {
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
+        adapter = new ArrayAdapter<Message>(this, android.R.layout.simple_list_item_1, messages) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
 
-                    String message = getItem(position).getTimestamp() + "\n" + getItem(position).getSender() + ": " + getItem(position).getMessage();
-                    ((TextView) view).setText(message);
-                    return view;
-                }
-            };
-            messageList.setAdapter(adapter);
-        }
+                String message = getItem(position).getTimestamp() + "\n" + getItem(position).getSender() + ": " + getItem(position).getMessage();
+                ((TextView) view).setText(message);
+                return view;
+            }
+        };
+        messageList.setAdapter(adapter);
     }
 
     public void sendMessage(View view) {

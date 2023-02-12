@@ -26,6 +26,20 @@ public class DBHelper extends SQLiteOpenHelper {
         MyDB.execSQL("DROP TABLE IF EXISTS chat");
     }
 
+    public void updateChatsSender(String changeUsername, String currentUsername){
+        SQLiteDatabase MyDB = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("sender", changeUsername);
+        MyDB.update("chat", cv, "sender = ?", new String[] {currentUsername});
+    }
+
+    public void updateChatsReceiver(String changeUsername, String currentUsername){
+        SQLiteDatabase MyDB = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("receiver", changeUsername);
+        MyDB.update("chat", cv, "receiver = ?", new String[] {currentUsername});
+    }
+
     public void sendChat(Message message){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
