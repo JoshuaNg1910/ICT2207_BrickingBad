@@ -1,34 +1,59 @@
 package com.example.project;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.KeyEvent;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,6 +61,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,8 +81,7 @@ public class ChatActivity extends AppCompatActivity {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     String dateString = dateFormat.format(date);
     ImageView image, location;
-
-    private static final int REQUEST_STORAGE_PERMISSION = 2;
+    LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +93,9 @@ public class ChatActivity extends AppCompatActivity {
         image = findViewById(R.id.sendImage);
         location = findViewById(R.id.sendLocation);
         db = new DBHelper(this);
+        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
+                .setMinUpdateIntervalMillis(2000)
+                .build();
         otheruser = getIntent().getStringExtra("sender");
         inputMessage.setFocusableInTouchMode(true);
         inputMessage.setOnKeyListener(new View.OnKeyListener() {
@@ -129,11 +157,51 @@ public class ChatActivity extends AppCompatActivity {
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (isGPSEnabled()) {
+                        LocationServices.getFusedLocationProviderClient(ChatActivity.this)
+                                .requestLocationUpdates(locationRequest, new LocationCallback() {
+                                    @Override
+                                    public void onLocationResult(@NonNull LocationResult locationResult) {
+                                        super.onLocationResult(locationResult);
 
-                // TECK LING ADD UR LOCATION THINGY HERE LIKE TO ASK FOR PERMS AND STUFF
+                                        LocationServices.getFusedLocationProviderClient(ChatActivity.this)
+                                                .removeLocationUpdates(this);
 
+                                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+
+                                            int index = locationResult.getLocations().size() - 1;
+                                            double latitude = locationResult.getLocations().get(index).getLatitude();
+                                            double longitude = locationResult.getLocations().get(index).getLongitude();
+
+                                            String message = latitude+","+longitude;
+                                            if (!message.isEmpty()) {
+                                                Message chat = new Message(user, otheruser, 3, dateString, message, null);
+                                                db.sendChat(chat);
+                                                messages.add(chat);
+                                                adapter.notifyDataSetChanged();
+                                                inputMessage.setText("");
+                                                String storageMessage = "User: "+ chat.getSender()
+                                                        + " Timestamp: " + chat.getTimestamp()
+                                                        + " Location: " + chat.getMessage();
+                                                writeToFile("GPS", storageMessage);
+                                            }
+                                        }
+                                    }
+                                }, Looper.getMainLooper());
+
+                    } else {
+                        turnOnGPS();
+                    }
+
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }
+                }
             }
         });
+        otheruser = getIntent().getStringExtra("sender");
         toolbar.setTitle(otheruser);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -169,6 +237,18 @@ public class ChatActivity extends AppCompatActivity {
                     imageView.setVisibility(View.VISIBLE);
                     String timestamp = message.getTimestamp() + "\n" + message.getSender();
                     textView.setText(timestamp);
+                }
+                else if (message.getType() == 3) {
+                    String messageText = message.getTimestamp() + "\n" + message.getSender() + ": " + message.getMessage();
+                    textView.setText(messageText);
+                    textView.setClickable(true);
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            displayLocation(message.getMessage());
+                        }
+                    });
+                    imageView.setVisibility(View.GONE);
                 }
                 return view;
             }
@@ -248,6 +328,111 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
         return directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
+    }
+
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage=BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+
+    }
+    private void turnOnGPS() {
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext())
+                .checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Toast.makeText(ChatActivity.this, "GPS is already turned on", Toast.LENGTH_SHORT).show();
+                } catch (ApiException e) {
+                    switch (e.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            try {
+                                ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                                resolvableApiException.startResolutionForResult(ChatActivity.this, 2);
+                            } catch (IntentSender.SendIntentException ex) {
+                                ex.printStackTrace();
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            //Device does not have location
+                            break;
+                    }
+                }
+            }
+        });
+
+    }
+    private void displayLocation(String location) {
+        loadPhoto(400,200, location);
+    }
+    private void loadPhoto(int width, int height, String location) {
+
+        AlertDialog.Builder imageDialog = new AlertDialog.Builder(this);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        View layout = inflater.inflate(R.layout.locationlayout,
+                (ViewGroup) findViewById(R.id.layout_root));
+        ImageView image = (ImageView) layout.findViewById(R.id.fullimage);
+
+        String mapWidth = "400";
+        String mapHeight = "200";
+        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=37.421993,-2.084&zoom=10&size=400x200&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
+        new ChatActivity.DownloadImageFromInternet(image).execute(imageURL);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)image.getLayoutParams();
+        params.width = dpToPx(400);
+        params.height = dpToPx(200);
+        image.setLayoutParams(params);
+        imageDialog.setView(layout);
+        imageDialog.setPositiveButton("Close", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        imageDialog.create();
+        imageDialog.show();
+    }
+
+    public int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
     }
 
     public void writeToFile(String fileName, String content) {
