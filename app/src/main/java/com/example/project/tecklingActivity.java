@@ -10,7 +10,6 @@ import android.widget.Button;
 
 public class tecklingActivity extends AppCompatActivity {
 
-    Button locationButton;
     Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +22,6 @@ public class tecklingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
-            }
-        });
-        locationButton = (Button) findViewById(R.id.LOCATION);
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), LocationService.class);
-                startActivity(intent);
             }
         });
     }
