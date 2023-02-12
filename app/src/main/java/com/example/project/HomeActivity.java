@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
 public class HomeActivity extends AppCompatActivity {
-    Button signup, signin, chattest;
+    Button signup, signin;
     Toolbar toolbar;
     TextView loginRegister;
 
@@ -21,7 +21,6 @@ public class HomeActivity extends AppCompatActivity {
 
         signup = findViewById(R.id.btnsignup);
         signin = findViewById(R.id.btnsignin);
-        chattest = findViewById(R.id.btnchattest);
         toolbar = findViewById(R.id.loginRegisterToolbar);
         loginRegister = findViewById(R.id.loginRegister);
         signup.setOnClickListener(new View.OnClickListener() {
@@ -36,13 +35,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-        chattest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ChatTestActivity.class);
                 startActivity(intent);
             }
         });

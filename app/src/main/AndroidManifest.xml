@@ -75,7 +75,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ChatTestActivity"
+            android:name=".ChatActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

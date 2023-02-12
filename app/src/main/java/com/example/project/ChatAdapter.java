@@ -1,19 +1,17 @@
 package com.example.project;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,6 +43,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 String name = cursor.getString(nameIndex);
                 byte[] dp = cursor.getBlob(dpIndex);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(dp, 0, dp.length);
+                holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, ChatActivity.class);
+                        intent.putExtra("sender", name);
+                        context.startActivity(intent);
+                    }
+                });
                 holder.imageView.setImageBitmap(bitmap);
                 holder.senderName.setText(name);
             }
@@ -61,12 +67,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout linearLayout;
         CircleImageView imageView;
         TextView senderName;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
+            linearLayout =  itemView.findViewById(R.id.chatlistlayout);
             imageView = itemView.findViewById(R.id.profilepic);
             senderName = itemView.findViewById(R.id.sendername);
         }

@@ -38,10 +38,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert("chat", null, cv);
     }
 
-    public List<Message> getAllMessages(String sender, String receiver){
-        List<Message> messages = new ArrayList<>();
+    public ArrayList<Message> getAllMessages(String sender, String receiver){
+        ArrayList<Message> messages = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM chat WHERE (sender = ? AND RECEIVER = ?) OR (SENDER = ? AND RECEIVER = ?)", new String[] {sender, receiver, receiver, sender});
+        Cursor cursor = db.rawQuery("SELECT * FROM chat WHERE (sender = ? AND RECEIVER = ?) OR (SENDER = ? AND RECEIVER = ?) ORDER BY timestamp ASC", new String[] {sender, receiver, receiver, sender});
         if (cursor.moveToFirst()){
             int senderIndex = cursor.getColumnIndex("sender");
             int receiverIndex = cursor.getColumnIndex("receiver");
