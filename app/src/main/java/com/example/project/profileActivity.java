@@ -178,6 +178,8 @@ public class profileActivity extends AppCompatActivity implements NavigationView
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_chat:
+                Intent chatlist = new Intent(this, chatlistActivity.class);
+                startActivity(chatlist);
                 break;
             case R.id.nav_profile:
                 Intent profile = new Intent(this, profileActivity.class);
