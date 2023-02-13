@@ -166,18 +166,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-<<<<<<< Updated upstream
-        <activity
-            android:name=".LocationService"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-=======
        <!-- <activity
->>>>>>> Stashed changes
             android:name=".retrieveContacts"
             android:exported="false">
             <meta-data
