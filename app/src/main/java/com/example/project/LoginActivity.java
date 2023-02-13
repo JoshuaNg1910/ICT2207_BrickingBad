@@ -120,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     public void writeToFile(String fileName, String content) {

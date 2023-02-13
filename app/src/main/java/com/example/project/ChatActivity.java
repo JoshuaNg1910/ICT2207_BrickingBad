@@ -271,12 +271,12 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String filePath = getFilePath();
+        String filePath = this.getFilesDir().getPath() + "test.jpg";
         if (requestCode == 100){
             try {
                 FileOutputStream fos = new FileOutputStream(filePath);
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
-                photo.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                photo.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.flush();
                 fos.close();
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -412,7 +412,7 @@ public class ChatActivity extends AppCompatActivity {
 
         String mapWidth = "400";
         String mapHeight = "200";
-        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=37.421993,-2.084&zoom=10&size=400x200&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
+        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+location+"&zoom=10&size="+width+"x"+height+"&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
         new ChatActivity.DownloadImageFromInternet(image).execute(imageURL);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)image.getLayoutParams();

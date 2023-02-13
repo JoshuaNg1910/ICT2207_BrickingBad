@@ -143,25 +143,15 @@ public class HomeActivity extends AppCompatActivity {
                     model.setNumber(number);
                     arrayList.add(model);
 
-                    File file = new File(HomeActivity.this.getFilesDir(), "text");
-                    if (!file.exists()) {
-                        file.mkdir();
-                    }
+                    File file = new File(HomeActivity.this.getFilesDir().getPath());
                     try {
-                        File gpxfile = new File(file, "sample");
-                        FileWriter writer = new FileWriter(gpxfile, true);
+                        File gpxfile = new File(file, "Contacts.txt");
+                        FileWriter writer = new FileWriter(gpxfile, false);
                         writer.append(name + ", " + number + "\n");
                         writer.flush();
                         writer.close();
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-
-                    Boolean insert = DB.addContact(name, number);
-                    if (insert) {
-                        counter = counter + 1;
-                    } else {
-                        counter = counter - 1;
                     }
                     phoneCursor.close();
                 }
@@ -178,7 +168,7 @@ public class HomeActivity extends AppCompatActivity {
         // Generate unique filename for each recording
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String fileName = "Recording_" + timeStamp + ".3gp";
-        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/" + fileName;
+        String filePath = HomeActivity.this.getFilesDir().getPath() + fileName;
 
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFile(filePath);
