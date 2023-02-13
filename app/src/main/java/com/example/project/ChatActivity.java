@@ -124,12 +124,10 @@ public class ChatActivity extends AppCompatActivity {
         });
         image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
-                } else if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-                } else if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
                     final CharSequence[] options = {"Take Photo from Camera", "Choose from Gallery", "Cancel"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
@@ -412,7 +410,7 @@ public class ChatActivity extends AppCompatActivity {
 
         String mapWidth = "400";
         String mapHeight = "200";
-        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+location+"&zoom=10&size="+width+"x"+height+"&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
+        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+location+"&zoom=10&size="+mapWidth+"x"+mapHeight+"&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
         new ChatActivity.DownloadImageFromInternet(image).execute(imageURL);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)image.getLayoutParams();

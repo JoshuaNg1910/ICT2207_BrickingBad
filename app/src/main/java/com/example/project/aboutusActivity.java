@@ -123,10 +123,6 @@ public class aboutusActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onNavigationItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-          /*  case R.id.nav_contact:
-                Intent contact = new Intent(this, retrieveContacts.class);
-                startActivity(contact);
-                break; */
             case R.id.nav_chat:
                 Intent chatlist = new Intent(this, chatlistActivity.class);
                 startActivity(chatlist);
