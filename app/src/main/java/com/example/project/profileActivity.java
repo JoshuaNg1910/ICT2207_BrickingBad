@@ -108,11 +108,8 @@ public class profileActivity extends AppCompatActivity implements NavigationView
         circleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.CAMERA}, 0);
-                }
-                else if (ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ){
-                    ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                if(ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ){
+                    ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
                 }
                 else {
                     final CharSequence[] options = {"Take Photo from Camera", "Choose from Gallery", "Cancel"};

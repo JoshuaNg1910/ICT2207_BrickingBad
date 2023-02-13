@@ -1,7 +1,6 @@
 package com.example.project;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,8 +9,6 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,10 +29,7 @@ import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Button;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -160,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
                         LocationServices.getFusedLocationProviderClient(ChatActivity.this)
                                 .requestLocationUpdates(locationRequest, new LocationCallback() {
                                     @Override
-                                    public void onLocationResult(@NonNull LocationResult locationResult) {
+                                    public void onLocationResult(LocationResult locationResult) {
                                         super.onLocationResult(locationResult);
 
                                         LocationServices.getFusedLocationProviderClient(ChatActivity.this)
@@ -373,7 +367,7 @@ public class ChatActivity extends AppCompatActivity {
 
         result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
             @Override
-            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+            public void onComplete(Task<LocationSettingsResponse> task) {
                 try {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
                     Toast.makeText(ChatActivity.this, "GPS is already turned on", Toast.LENGTH_SHORT).show();

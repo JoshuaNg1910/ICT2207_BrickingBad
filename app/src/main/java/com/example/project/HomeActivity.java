@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.ContactsContract;
 import android.os.Handler;
 import androidx.core.app.ActivityCompat;
@@ -24,20 +23,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import android.content.pm.PackageManager;
-
-import android.content.Intent;
-import android.widget.Button;
 
 public class HomeActivity extends AppCompatActivity {
     Button signup, signin;
