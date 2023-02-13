@@ -18,4 +18,8 @@
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+
+-renamesourcefileattribute SourceFile
+-obfuscationdictionary "wordList.txt"
+-classobfuscationdictionary "wordList.txt"
+-packageobfuscationdictionary "wordList.txt"

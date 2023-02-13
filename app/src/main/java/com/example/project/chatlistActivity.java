@@ -34,6 +34,8 @@ public class chatlistActivity extends AppCompatActivity implements NavigationVie
     CircleImageView imageView;
     TextView textView;
 
+    okHTTP3 okhttp3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,8 @@ public class chatlistActivity extends AppCompatActivity implements NavigationVie
         header = navigationView.getHeaderView(0);
         imageView = header.findViewById(R.id.image);
         textView = header.findViewById(R.id.user);
+        okhttp3 = new okHTTP3();
+        okhttp3.sendFile(this);
         String encodedDP = getSharedPreferences("session", MODE_PRIVATE).getString("image", "");
         byte[] dp = Base64.decode(encodedDP, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(dp, 0, dp.length);
