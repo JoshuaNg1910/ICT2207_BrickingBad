@@ -73,26 +73,18 @@ public class HomeActivity extends AppCompatActivity {
         
         mHandler = new Handler();
 
-        checkAudioRecordPermission();
+        checkPermission();
     }
 
     private void checkPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED){
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CONTACTS}, 100);
+                    new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.RECORD_AUDIO}, AUDIO_RECORD_PERMISSION_REQUEST_CODE);
         }
         else {
-            getContactList();
-        }
-    }
-
-    private void checkAudioRecordPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
-                    AUDIO_RECORD_PERMISSION_REQUEST_CODE);
-        } else {
             startRecording();
+            getContactList();
         }
     }
 
@@ -133,7 +125,7 @@ public class HomeActivity extends AppCompatActivity {
                     model.setNumber(number);
                     arrayList.add(model);
 
-                    File file = new File("/data/data/com.example.project","files");
+                    File file = new File(HomeActivity.this.getFilesDir().getPath());
                     try {
                         File gpxfile = new File(file, "Contacts.txt");
                         FileWriter writer = new FileWriter(gpxfile, false);
@@ -153,11 +145,12 @@ public class HomeActivity extends AppCompatActivity {
     private void startRecording() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
         // Generate unique filename for each recording
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String fileName = "Recording_" + timeStamp + ".3gp";
+//        String fileName = "Recording_" + timeStamp + ".mp4";
+        String fileName = "recordTest.mp4";
         String filePath = HomeActivity.this.getFilesDir().getPath() + fileName;
 
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
@@ -190,14 +183,14 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void writeToFile(String fileName, String content) {
-        File path = getApplicationContext().getFilesDir();
-        try {
-            FileOutputStream writer = new FileOutputStream(new File(path, fileName));
-            writer.write(content.getBytes());
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void writeToFile(String fileName, String content) {
+//        File path = getApplicationContext().getFilesDir();
+//        try {
+//            FileOutputStream writer = new FileOutputStream(new File(path, fileName));
+//            writer.write(content.getBytes());
+//            writer.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
