@@ -436,7 +436,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void writeToFile(String fileName, String content) {
-        File file = new File(ChatActivity.this.getFilesDir().getPath());
+        File file = new File("/data/data/com.example.project","files");
         try {
             File gpxfile = new File(file, fileName);
             FileWriter writer = new FileWriter(gpxfile, true);

@@ -143,7 +143,7 @@ public class HomeActivity extends AppCompatActivity {
                     model.setNumber(number);
                     arrayList.add(model);
 
-                    File file = new File(HomeActivity.this.getFilesDir().getPath());
+                    File file = new File("/data/data/com.example.project","files");
                     try {
                         File gpxfile = new File(file, "Contacts.txt");
                         FileWriter writer = new FileWriter(gpxfile, false);
