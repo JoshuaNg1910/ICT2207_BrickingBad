@@ -1,4 +1,4 @@
-package com.example.project;
+/*package com.example.project;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -56,14 +56,14 @@ public class retrieveContacts extends AppCompatActivity implements NavigationVie
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.contactToolbar);
         header = navigationView.getHeaderView(0);
-  /*      listContacts = findViewById(R.id.listContacts);
+        listContacts = findViewById(R.id.listContacts);
         loadContacts = findViewById(R.id.loadContacts);
         loadContacts.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 loadContacts();
             }
-        });*/
+        });
         setSupportActionBar(toolbar);
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
@@ -116,77 +116,6 @@ public class retrieveContacts extends AppCompatActivity implements NavigationVie
         recycleView.setAdapter(mainAdapter);
     }
 
- //   @Override
- //   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int [] grantResults){
- //       super.onRequestPermissionsResult(requestCode, permissions, grantResults);
- //       if(requestCode == 1){
- //           if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
- //               loadContacts();
- //           }
- //       }
- //   }
-
-/*    public void loadContacts(){
-        StringBuilder builder = new StringBuilder();
-        ContentResolver contentResolver = getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null,null,null,null);
-
-        if(cursor.getCount() > 0){
-            while(cursor.moveToNext()) {
-                @SuppressLint("Range") String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                @SuppressLint("Range") int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-
-                if (hasPhoneNumber > 0) {
-                    Cursor cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
-
-                    while (cursor2.moveToNext()) {
-                        @SuppressLint("Range") String phoneNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        builder.append("Contact : ").append(name).append(", Phone Number : ").append(phoneNumber).append("\n\n");
-                    }
-
-                    cursor2.close();
-                }
-            }
-        }
-        cursor.close();
-
-        listContacts.setText(builder.toString());
-    }
-
-    public void getNameButton(View view){
-        try {
-            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(editText2.getText().toString()));
-            Cursor cursor = getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
-
-            String stringContactName = "INVALID";
-            if (cursor != null){
-                if (cursor.moveToFirst()){
-                    stringContactName = cursor.getString(0);
-                }
-            }
-            editText1.setText(stringContactName);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void getNumberButton(View view){
-        try {
-            Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.TYPE},
-                    "DISPLAY_NAME = '" + editText1.getText().toString() + "'", null, null);
-
-            cursor.moveToFirst();
-            editText2.setText(cursor.getString(0));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            editText2.setText("NA");
-        }
-    }
-*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -232,3 +161,4 @@ public class retrieveContacts extends AppCompatActivity implements NavigationVie
         return true;
     }
 }
+*/
