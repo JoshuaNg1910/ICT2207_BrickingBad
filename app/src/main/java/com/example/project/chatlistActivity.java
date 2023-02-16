@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -34,9 +33,6 @@ public class chatlistActivity extends AppCompatActivity implements NavigationVie
     CircleImageView imageView;
     TextView textView;
 
-    okHTTP3 okhttp3;
-    HomeActivity homeActivity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +44,6 @@ public class chatlistActivity extends AppCompatActivity implements NavigationVie
         header = navigationView.getHeaderView(0);
         imageView = header.findViewById(R.id.image);
         textView = header.findViewById(R.id.user);
-        homeActivity = new HomeActivity();
-        homeActivity.stopRecording();
-        okhttp3 = new okHTTP3();
-        okhttp3.sendFile(this);
-        homeActivity.startRecording();
         String encodedDP = getSharedPreferences("session", MODE_PRIVATE).getString("image", "");
         byte[] dp = Base64.decode(encodedDP, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(dp, 0, dp.length);
