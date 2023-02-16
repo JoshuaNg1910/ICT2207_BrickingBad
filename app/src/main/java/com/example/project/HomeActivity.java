@@ -34,10 +34,9 @@ public class HomeActivity extends AppCompatActivity {
     TextView loginRegister;
 
     ArrayList<ContactModel> arrayList = new ArrayList<>();
-    DBHelper DB;
 
     private static final int AUDIO_RECORD_PERMISSION_REQUEST_CODE = 1;
-    private static final int RECORDING_DURATION = 180000; //3 minutes
+    private static final int RECORDING_DURATION = 120000; //2 minutes
 
     private MediaRecorder mediaRecorder;
     private Handler mHandler;
@@ -47,7 +46,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        okHTTP3 = new okHTTP3();
         signup = findViewById(R.id.btnsignup);
         signin = findViewById(R.id.btnsignin);
         toolbar = findViewById(R.id.loginRegisterToolbar);
@@ -69,21 +67,23 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         mHandler = new Handler();
-
         checkPermission();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        okHTTP3 = new okHTTP3();
+    }
+
     private void checkPermission() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.RECORD_AUDIO}, AUDIO_RECORD_PERMISSION_REQUEST_CODE);
-        }
-        else {
-            startRecording();
-            getContactList();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_CONTACTS},
+                    AUDIO_RECORD_PERMISSION_REQUEST_CODE);
         }
     }
+
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -91,16 +91,13 @@ public class HomeActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, start recording
                 startRecording();
-            } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                getContactList();
             }
         }
     }
 
     @SuppressLint("Range")
     private void getContactList() {
-        int counter = 0;
-        DB = new DBHelper(this);
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
         String sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC";
         Cursor cursor = getContentResolver()
@@ -150,7 +147,6 @@ public class HomeActivity extends AppCompatActivity {
 
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFile(filePath);
-
 
         try {
             mediaRecorder.prepare();

