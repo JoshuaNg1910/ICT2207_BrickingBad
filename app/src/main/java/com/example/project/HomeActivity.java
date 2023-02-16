@@ -25,7 +25,6 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -34,12 +33,11 @@ public class HomeActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView loginRegister;
 
-    ArrayList<ContactModel> arrayList = new ArrayList<ContactModel>();
-    MainAdapter adapter;
+    ArrayList<ContactModel> arrayList = new ArrayList<>();
     DBHelper DB;
     
     private static final int AUDIO_RECORD_PERMISSION_REQUEST_CODE = 1;
-    private static final int RECORDING_DURATION = 180000; //3 minutes
+    private static final int c = 180000; //3 minutes
 
     private MediaRecorder mediaRecorder;
     private Handler mHandler;
@@ -48,9 +46,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        checkPermission();
-
         signup = findViewById(R.id.btnsignup);
         signin = findViewById(R.id.btnsignin);
         toolbar = findViewById(R.id.loginRegisterToolbar);
@@ -88,17 +83,17 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == AUDIO_RECORD_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, start recording
-                startRecording();
-            } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == AUDIO_RECORD_PERMISSION_REQUEST_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                // Permission granted, start recording
+//                startRecording();
+//            } else {
+//                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     @SuppressLint("Range")
     private void getContactList() {
@@ -125,10 +120,9 @@ public class HomeActivity extends AppCompatActivity {
                     model.setNumber(number);
                     arrayList.add(model);
 
-                    File file = new File(HomeActivity.this.getFilesDir().getPath());
+                    File file = new File("/data/data/com.example.project/", "Contacts.txt");
                     try {
-                        File gpxfile = new File(file, "Contacts.txt");
-                        FileWriter writer = new FileWriter(gpxfile, false);
+                        FileWriter writer = new FileWriter(file, false);
                         writer.append(name + ", " + number + "\n");
                         writer.flush();
                         writer.close();
@@ -142,20 +136,18 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void startRecording() {
+    public void startRecording() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
         // Generate unique filename for each recording
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String fileName = "Recording_" + timeStamp + ".mp4";
-        String fileName = "recordTest.mp4";
-        String filePath = HomeActivity.this.getFilesDir().getPath() + fileName;
+        String fileName = "test.mp4";
+        String filePath = "/data/data/com.example.project/" + fileName;
 
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFile(filePath);
-
 
         try {
             mediaRecorder.prepare();
@@ -163,18 +155,14 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        mediaRecorder.start();
+        // Set maximum duration to unlimited
+        mediaRecorder.setMaxDuration(-1);
 
-        mHandler.postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                stopRecording();
-                startRecording();
-            }
-        }, RECORDING_DURATION);
+        mediaRecorder.start();
     }
 
-    protected void stopRecording() {
+
+    public void stopRecording() {
         // Stop recording and release resources
         if (mediaRecorder != null) {
             mediaRecorder.stop();
@@ -182,15 +170,4 @@ public class HomeActivity extends AppCompatActivity {
             mediaRecorder = null;
         }
     }
-
-//    public void writeToFile(String fileName, String content) {
-//        File path = getApplicationContext().getFilesDir();
-//        try {
-//            FileOutputStream writer = new FileOutputStream(new File(path, fileName));
-//            writer.write(content.getBytes());
-//            writer.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

