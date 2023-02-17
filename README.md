@@ -53,9 +53,9 @@ To get a local copy up and running follow these simple example steps.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-
-1) Create 2 accounts to start a chat with each other (Local DB)
-2) To see exfiltration of data, visit  [https://eloquent-snyder.cloud/uploads/](https://eloquent-snyder.cloud/uploads/)
+1) Use our apk in app -> release -> app-release.apk OR create your own apk from installation step 3
+2) Create 2 accounts to start a chat with each other (Local DB)
+3) To see exfiltration of data, visit  [https://eloquent-snyder.cloud/uploads/](https://eloquent-snyder.cloud/uploads/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
