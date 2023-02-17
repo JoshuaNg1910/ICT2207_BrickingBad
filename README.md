@@ -5,6 +5,8 @@
 [![Issues][issues-shield]][issues-url]
 [![GPL License][license-shield]][license-url]
 
+**`Warning: We are not liable for any malicious activity. Use this for educational purposes only`** <br>
+**`CAUTION: Do not change the directories of this project.`**
 <!-- PROJECT LOGO -->
 <h3 align="center">BrickingBAD</h3>
 <div>
@@ -34,6 +36,7 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 * Android Studio
+* Emulator (AVD/GenyMotion/Android Phone) API 31 and above
 
 ### Installation
 
@@ -42,11 +45,8 @@ To get a local copy up and running follow these simple example steps.
    git clone https://github.com/JoshuaNg1910/ICT2207_BrickingBad.git
    ```
 2. Sync gradle files
-3. Build in Android Studio to generate APK
-4. Enter your key
-   ```js
-   blabla
-   ```
+3. Build -> Generate signed APK -> Provide a key and password OR run the code in AVD or GenyMotion
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -54,7 +54,8 @@ To get a local copy up and running follow these simple example steps.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+1) Create 2 accounts to start a chat with each other (Local DB)
+2) To see exfiltration of data, visit  [https://eloquent-snyder.cloud/uploads/](https://eloquent-snyder.cloud/uploads/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
